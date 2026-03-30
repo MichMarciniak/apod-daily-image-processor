@@ -1,0 +1,22 @@
+using backend.Data.Configuration;
+using backend.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace backend.Data;
+
+public class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    {
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    }
+
+    public DbSet<Image> Images { get; set; }
+    public DbSet<Concept> Concepts { get; set; }
+
+}
