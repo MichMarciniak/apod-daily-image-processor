@@ -17,6 +17,5 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Image> Images { get; set; }
-    public DbSet<Concept> Concepts { get; set; }
 
 }

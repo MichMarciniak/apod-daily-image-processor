@@ -5,6 +5,5 @@ public record ApodApiResponse(
     string Title,
     string Url,
     string Explanation,
-    string? Copyright,
-    Dictionary<int, string> Concepts
+    string? Copyright
 );

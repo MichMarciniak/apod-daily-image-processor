@@ -13,7 +13,6 @@ public class Image
 
     public string? Copyright { get; set; }
 
-    public IEnumerable<Concept> Concepts { get; set; }
 
     public Status Status { get; set; }
 }

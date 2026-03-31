@@ -11,8 +11,7 @@ public static class ImageMappings
             image.Title,
             image.Explanation,
             image.Date,
-            image.Copyright,
-            image.Concepts.Select(x => x.ToDto()).ToList()
+            image.Copyright
         );
     }
 }

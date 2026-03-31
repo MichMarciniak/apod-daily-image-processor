@@ -10,13 +10,11 @@ namespace backend.Services;
 
 public class ImageService
 {
-    private readonly ConceptService _service;
     private readonly AppDbContext _context;
     private readonly ApiConfig _config;
 
-    public ImageService(ConceptService service, AppDbContext context, IOptions<ApiConfig> config)
+    public ImageService(AppDbContext context, IOptions<ApiConfig> config)
     {
-        _service = service;
         _context = context;
         _config = config.Value;
     }

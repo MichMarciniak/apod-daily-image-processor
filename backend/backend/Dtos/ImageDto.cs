@@ -6,8 +6,7 @@ public record ImageResponse(
     string Title,
     string Explanation,
     DateTime Date,
-    string? Copyright,
-    List<ConceptResponse> Concepts
+    string? Copyright
 );
 
 public record ImageSaveRequest(
@@ -15,7 +14,6 @@ public record ImageSaveRequest(
     string Explanation,
     DateTime Date,
     string? Copyright,
-    List<ConceptResponse> Concepts,
     string HdPath,
     string ThumbnailPath
 );

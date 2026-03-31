@@ -42,7 +42,6 @@ if (apiConfig != null)
     builder.Services.AddHostedService<ApodApiClient>();
 }
 
-builder.Services.AddScoped<ConceptService>();
 builder.Services.AddScoped<ImageService>();
 
 

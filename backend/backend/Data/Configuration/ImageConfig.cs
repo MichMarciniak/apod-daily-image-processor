@@ -10,10 +10,6 @@ public class ImageConfig : IEntityTypeConfiguration<Image>
     {
         builder.HasIndex(x => x.Date);
         
-        builder.HasMany(x => x.Concepts)
-            .WithMany()
-            .UsingEntity("ImageConcept");
-
         builder.Property(x => x.Status)
             .HasConversion<string>();
 
