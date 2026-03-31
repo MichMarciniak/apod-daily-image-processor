@@ -13,5 +13,9 @@ public class ImageConfig : IEntityTypeConfiguration<Image>
         builder.HasMany(x => x.Concepts)
             .WithMany()
             .UsingEntity("ImageConcept");
+
+        builder.Property(x => x.Status)
+            .HasConversion<string>();
+
     }
 }

@@ -15,4 +15,14 @@ public class Image
 
     public IEnumerable<Concept> Concepts { get; set; }
 
+    public Status Status { get; set; }
 }
+
+public enum Status
+{
+    Pending,
+    Processing,
+    Completed,
+    Failed
+}
+

@@ -1,7 +1,7 @@
 using backend.Configuration;
 using backend.Data;
 using backend.Services;
-using Microsoft.AspNetCore.DataProtection;
+using backend.Services.Background;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -29,9 +29,17 @@ var apiConfig = apiConfigSection.Get<ApiConfig>();
 if (apiConfig != null)
 {
     builder.Services.AddHttpClient(apiConfig.ClientName, client =>
-    {
-        client.BaseAddress = new Uri(apiConfig.BaseApi);
-    });
+        {
+            client.BaseAddress = new Uri(apiConfig.BaseApi);
+        })
+        .AddStandardResilienceHandler(options =>
+        {
+            options.Retry.MaxRetryAttempts = 3;
+            options.Retry.Delay = TimeSpan.FromSeconds(5);
+            //circut breaker and others
+        });
+
+    builder.Services.AddHostedService<ApodApiClient>();
 }
 
 builder.Services.AddScoped<ConceptService>();
