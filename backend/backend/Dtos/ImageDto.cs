@@ -6,7 +6,8 @@ public record ImageResponse(
     string Title,
     string Explanation,
     DateTime Date,
-    string? Copyright
+    string? Copyright,
+    string HdPath
 );
 
 public record ImageSaveRequest(
@@ -19,5 +20,7 @@ public record ImageSaveRequest(
 );
 
 public record ImageThumbnailResponse(
-    
+    string Title,
+    DateTime Date,
+    string ThumbnailPath
 );

@@ -11,7 +11,17 @@ public static class ImageMappings
             image.Title,
             image.Explanation,
             image.Date,
-            image.Copyright
+            image.Copyright,
+            image.HdPath
+        );
+    }
+
+    public static ImageThumbnailResponse ToThumbDto(this Image image)
+    {
+        return new ImageThumbnailResponse(
+            image.Title,
+            image.Date,
+            image.ThumbnailPath!
         );
     }
 }

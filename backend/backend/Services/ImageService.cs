@@ -19,6 +19,13 @@ public class ImageService
         _config = config.Value;
     }
 
+    public async Task<List<ImageThumbnailResponse>> GetAllThumbnails()
+    {
+        var res = await _context.Images.Select(x => x.ToThumbDto()).ToListAsync();
+
+        return res;
+    }
+
     public async Task<ImageResponse?> GetImageById(Guid id)
     {
         var res = await _context.Images
