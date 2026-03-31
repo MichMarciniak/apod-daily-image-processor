@@ -1,22 +1,24 @@
+using backend.Configuration;
 using backend.Data;
 using backend.Dtos;
 using backend.Mappers;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace backend.Services;
 
 public class ImageService
 {
-    private readonly HttpClient _httpClient;
     private readonly ConceptService _service;
     private readonly AppDbContext _context;
+    private readonly ApiConfig _config;
 
-    public ImageService(IHttpClientFactory httpClientFactory, ConceptService service, AppDbContext context)
+    public ImageService(ConceptService service, AppDbContext context, IOptions<ApiConfig> config)
     {
-        _httpClient = httpClientFactory.CreateClient("NasaClient");
         _service = service;
         _context = context;
+        _config = config.Value;
     }
 
 
