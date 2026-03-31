@@ -1,6 +1,6 @@
 using System.Threading.Channels;
 
-namespace backend.Services.Background;
+namespace backend.Utils;
 
 public class ImageProcessingQueue
 {

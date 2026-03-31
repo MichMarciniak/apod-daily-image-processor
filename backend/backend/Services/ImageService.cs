@@ -55,6 +55,7 @@ public class ImageService
             Id = id,
             Title = response.Title,
             Explanation = response.Explanation,
+            Date = response.Date,
             HdPath = fullPath,
             Status = Status.Pending
         };

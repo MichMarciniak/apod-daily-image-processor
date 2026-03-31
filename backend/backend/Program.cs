@@ -2,6 +2,7 @@ using backend.Configuration;
 using backend.Data;
 using backend.Services;
 using backend.Services.Background;
+using backend.Utils;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 

@@ -1,6 +1,7 @@
 using backend.Configuration;
 using backend.Data;
 using backend.Models;
+using backend.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;

@@ -1,6 +1,6 @@
-using System.ComponentModel;
 using backend.Configuration;
 using backend.Dtos;
+using backend.Utils;
 using Microsoft.Extensions.Options;
 
 namespace backend.Services.Background;
@@ -32,9 +32,10 @@ public class ApodApiClient : BackgroundService
     private async Task FetchAndProcess(CancellationToken ct)
     {
         var client = _clientFactory.CreateClient(_apiConfig.ClientName);
-        
+
+        var url = $"{_apiConfig.BaseApi}?api_key={_secrets.ApiKey}";
         var response = await client.GetFromJsonAsync<ApodApiResponse>(
-            $"{_apiConfig.BaseApi}?api_key={_secrets.ApiKey}", ct);
+            url,ct);
 
         if (response != null)
         {
@@ -48,8 +49,6 @@ public class ApodApiClient : BackgroundService
 
             _logger.LogInformation($"Queueing image: {imageId} to processing...");
             await _queue.EnqueueAsync(imageId);
-            
-
         }
     }
 
