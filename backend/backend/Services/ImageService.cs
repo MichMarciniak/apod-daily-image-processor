@@ -1,4 +1,6 @@
 using backend.Data;
+using backend.Dtos;
+using backend.Mappers;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,9 +8,9 @@ namespace backend.Services;
 
 public class ImageService
 {
-    private HttpClient _httpClient;
-    private ConceptService _service;
-    private AppDbContext _context;
+    private readonly HttpClient _httpClient;
+    private readonly ConceptService _service;
+    private readonly AppDbContext _context;
 
     public ImageService(IHttpClientFactory httpClientFactory, ConceptService service, AppDbContext context)
     {
@@ -18,17 +20,22 @@ public class ImageService
     }
 
 
-    public async Task<Image> GetImageById(int id)
+    public async Task<ImageResponse?> GetImageById(int id)
     {
-        var res = await _context.Images.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var res = await _context.Images
+            .Where(x => x.Id == id)
+            .Select(x => x.ToDto())
+            .FirstOrDefaultAsync();
 
         return res;
-
     }
 
-    public async Task<Image> GetImageByDate(DateTime date)
+    public async Task<ImageResponse?> GetImageByDate(DateTime date)
     {
-        var res = await _context.Images.Where(x => x.Date == date).FirstOrDefaultAsync();
+        var res = await _context.Images
+            .Where(x => x.Date == date)
+            .Select(x => x.ToDto())
+            .FirstOrDefaultAsync();
 
         return res;
     }
