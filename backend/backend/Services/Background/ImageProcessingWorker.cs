@@ -40,10 +40,17 @@ public class ImageProcessingWorker : BackgroundService
                 {
                     _logger.LogInformation($"Processing image {image.Title}...");
 
-                    var thumbFileName = Path.GetFileName(image.HdPath).Replace("_hd", "_thumb");
-                    var thumbPath = Path.Combine(_config.ImageDir, thumbFileName);
+                    var datePath = image.Date.ToString("yyyy-MM-dd");
+                    var fileName = $"{datePath}.jpg";
+                    var thumbFolder = Path.Combine(_config.ImageDir, "images", "thumbs");
 
-                    using (var imageTool = await SixLabors.ImageSharp.Image.LoadAsync(image.HdPath, stoppingToken))
+                    if (!Directory.Exists(thumbFolder)) Directory.CreateDirectory(thumbFolder);
+
+                    var thumbPath = Path.Combine(thumbFolder, fileName);
+
+                    var hdPath = Path.Combine(_config.ImageDir, image.HdPath.TrimStart('/'));
+
+                    using (var imageTool = await SixLabors.ImageSharp.Image.LoadAsync(hdPath, stoppingToken))
                     {
                         imageTool.Mutate(x => x.Resize(new ResizeOptions
                         {
@@ -54,7 +61,7 @@ public class ImageProcessingWorker : BackgroundService
                         await imageTool.SaveAsync(thumbPath, stoppingToken);
                     }
 
-                    image.ThumbnailPath = thumbPath;
+                    image.ThumbnailPath = $"/images/thumbs/{fileName}";
                     image.Status = Status.Completed;
 
                     await db.SaveChangesAsync(stoppingToken);

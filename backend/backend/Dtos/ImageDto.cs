@@ -17,3 +17,7 @@ public record ImageSaveRequest(
     string HdPath,
     string ThumbnailPath
 );
+
+public record ImageThumbnailResponse(
+    
+);

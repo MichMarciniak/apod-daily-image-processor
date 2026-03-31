@@ -41,29 +41,32 @@ public class ImageService
 
     public async Task<Guid> SaveImageFromApi(ApodApiResponse response, Stream imageStream, CancellationToken ct)
     {
-        var id = Guid.NewGuid();
-        var fileName = $"{id}_hd.jpg";
-        var fullPath = Path.Combine(_config.ImageDir, fileName);
+        var fileName = $"{response.Date:yyyy-MM-dd}.jpg";
 
-        using (var fileStream = new FileStream(fullPath, FileMode.Create))
+        var folderPath = Path.Combine(_config.ImageDir, "images", "hd");
+        
+        if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
+        var fullPath = Path.Combine(folderPath, fileName);
+        
+        using (var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None))
         {
             await imageStream.CopyToAsync(fileStream, ct);
         }
 
         var image = new Image
         {
-            Id = id,
             Title = response.Title,
             Explanation = response.Explanation,
             Date = response.Date,
-            HdPath = fullPath,
+            HdPath = $"/images/hd/{fileName}",
             Status = Status.Pending
         };
 
         _context.Images.Add(image);
         await _context.SaveChangesAsync(ct);
 
-        return id;
+        return image.Id;
     }
     
 }
