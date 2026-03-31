@@ -46,9 +46,14 @@ public class ApodApiClient : BackgroundService
             var service = scope.ServiceProvider.GetRequiredService<ImageService>();
 
             var imageId = await service.SaveImageFromApi(response, imageStream, ct);
+            if (imageId == null)
+            {
+                _logger.LogWarning($"Image already exists. Skipping.");
+                return;
+            }
 
             _logger.LogInformation($"Queueing image: {imageId} to processing...");
-            await _queue.EnqueueAsync(imageId);
+            await _queue.EnqueueAsync((Guid)imageId, ct);
         }
     }
 

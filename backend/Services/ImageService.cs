@@ -46,8 +46,13 @@ public class ImageService
         return res;
     }
 
-    public async Task<Guid> SaveImageFromApi(ApodApiResponse response, Stream imageStream, CancellationToken ct)
+    public async Task<Guid?> SaveImageFromApi(ApodApiResponse response, Stream imageStream, CancellationToken ct)
     {
+        if (await _context.Images.AnyAsync(x => x.Date == response.Date))
+        {
+            return null;
+        }
+        
         var fileName = $"{response.Date:yyyy-MM-dd}.jpg";
 
         var folderPath = Path.Combine(_config.ImageDir, "images", "hd");
