@@ -2,12 +2,12 @@ namespace backend.Models;
 
 public class Image
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Title { get; set; }
     public string Explanation { get; set; }
 
     public string HdPath { get; set; }
-    public string ThumbnailPath { get; set; }
+    public string? ThumbnailPath { get; set; }
 
     public DateTime Date { get; set; }
 

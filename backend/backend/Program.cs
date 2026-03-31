@@ -28,10 +28,7 @@ var apiConfig = apiConfigSection.Get<ApiConfig>();
 
 if (apiConfig != null)
 {
-    builder.Services.AddHttpClient(apiConfig.ClientName, client =>
-        {
-            client.BaseAddress = new Uri(apiConfig.BaseApi);
-        })
+    builder.Services.AddHttpClient(apiConfig.ClientName)
         .AddStandardResilienceHandler(options =>
         {
             options.Retry.MaxRetryAttempts = 3;
@@ -43,7 +40,8 @@ if (apiConfig != null)
 }
 
 builder.Services.AddScoped<ImageService>();
-
+builder.Services.AddSingleton<ImageProcessingQueue>();
+builder.Services.AddHostedService<ImageProcessingWorker>();
 
 var app = builder.Build();
 

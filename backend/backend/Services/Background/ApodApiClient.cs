@@ -9,28 +9,47 @@ public class ApodApiClient : BackgroundService
 {
     private readonly IHttpClientFactory _clientFactory;
     private readonly ILogger<ApodApiClient> _logger;
-    private readonly SecretsConfig _config;
+    private readonly SecretsConfig _secrets;
+    private readonly ApiConfig _apiConfig;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ImageProcessingQueue _queue;
 
-    public ApodApiClient(IHttpClientFactory clientFactory, ILogger<ApodApiClient> logger, IOptions<SecretsConfig> config)
+    public ApodApiClient(IHttpClientFactory clientFactory,
+        ILogger<ApodApiClient> logger,
+        IOptions<SecretsConfig> secrets,
+        IOptions<ApiConfig> apiConfig,
+        IServiceScopeFactory scopeFactory,
+        ImageProcessingQueue queue)
     {
         _clientFactory = clientFactory;
         _logger = logger;
-        _config = config.Value;
+        _secrets = secrets.Value;
+        _apiConfig = apiConfig.Value;
+        _scopeFactory = scopeFactory;
+        _queue = queue;
     }
 
     private async Task FetchAndProcess(CancellationToken ct)
     {
-        var client = _clientFactory.CreateClient("NasaClient");
+        var client = _clientFactory.CreateClient(_apiConfig.ClientName);
         
-        var response = await client.GetFromJsonAsync<ApodApiResponse>($"?api_key={_config.ApiKey}", ct);
+        var response = await client.GetFromJsonAsync<ApodApiResponse>(
+            $"{_apiConfig.BaseApi}?api_key={_secrets.ApiKey}", ct);
 
         if (response != null)
         {
             _logger.LogInformation($"Got APOD: {response.Title}");
-            _logger.LogInformation($"Full Response: {response}");
+            using var imageStream = await client.GetStreamAsync(response.Url, ct);
             
-            // send it to service
+            var scope = _scopeFactory.CreateScope();
+            var service = scope.ServiceProvider.GetRequiredService<ImageService>();
+
+            var imageId = await service.SaveImageFromApi(response, imageStream, ct);
+
+            _logger.LogInformation($"Queueing image: {imageId} to processing...");
+            await _queue.EnqueueAsync(imageId);
             
+
         }
     }
 

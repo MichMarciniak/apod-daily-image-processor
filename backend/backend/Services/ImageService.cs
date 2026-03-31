@@ -19,8 +19,7 @@ public class ImageService
         _config = config.Value;
     }
 
-
-    public async Task<ImageResponse?> GetImageById(int id)
+    public async Task<ImageResponse?> GetImageById(Guid id)
     {
         var res = await _context.Images
             .Where(x => x.Id == id)
@@ -40,5 +39,30 @@ public class ImageService
         return res;
     }
 
+    public async Task<Guid> SaveImageFromApi(ApodApiResponse response, Stream imageStream, CancellationToken ct)
+    {
+        var id = Guid.NewGuid();
+        var fileName = $"{id}_hd.jpg";
+        var fullPath = Path.Combine(_config.ImageDir, fileName);
+
+        using (var fileStream = new FileStream(fullPath, FileMode.Create))
+        {
+            await imageStream.CopyToAsync(fileStream, ct);
+        }
+
+        var image = new Image
+        {
+            Id = id,
+            Title = response.Title,
+            Explanation = response.Explanation,
+            HdPath = fullPath,
+            Status = Status.Pending
+        };
+
+        _context.Images.Add(image);
+        await _context.SaveChangesAsync(ct);
+
+        return id;
+    }
     
 }
