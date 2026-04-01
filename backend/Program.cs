@@ -4,6 +4,7 @@ using backend.Services;
 using backend.Services.Background;
 using backend.Utils;
 using Microsoft.EntityFrameworkCore;
+using Polly;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +35,7 @@ if (apiConfig != null)
         {
             options.Retry.MaxRetryAttempts = 3;
             options.Retry.Delay = TimeSpan.FromSeconds(5);
-            //circut breaker and others
+            options.Retry.BackoffType = DelayBackoffType.Exponential;
         });
 
     builder.Services.AddHostedService<ApodApiClient>();
