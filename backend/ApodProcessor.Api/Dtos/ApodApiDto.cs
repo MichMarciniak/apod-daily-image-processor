@@ -1,9 +1,10 @@
 namespace backend.Dtos;
 
-public record ApodApiResponse(
-    DateTime Date,
-    string Title,
-    string Url,
-    string Explanation,
-    string? Copyright
-);
+public record ApodApiResponse
+{
+    public DateTime Date { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string Url { get; set; } = string.Empty;
+    public string Explanation { get; set; } = string.Empty;
+    public string? Copyright { get; set; }
+}
