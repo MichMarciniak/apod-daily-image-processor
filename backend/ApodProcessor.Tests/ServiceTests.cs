@@ -7,6 +7,7 @@ using backend.Services;
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace ApodProcessor.Tests;
 
@@ -19,7 +20,7 @@ public class ServiceTests : IDisposable
 
     public ServiceTests()
     {
-        // zamiast bazy danych to w pamięci
+        // --- DB ---
         _connection = new SqliteConnection("Filename=:memory:");
         _connection.Open();
         var options = new DbContextOptionsBuilder<AppDbContext>()
@@ -29,9 +30,10 @@ public class ServiceTests : IDisposable
         _context = new AppDbContext(options);
         _context.Database.EnsureCreated();
 
+        // --- Example Image --- 
         _testImageDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
         var apiConfig = new ApiConfig { ImageDir = _testImageDir };
-        var wrappedOptions = Microsoft.Extensions.Options.Options.Create(apiConfig);
+        var wrappedOptions = Options.Create(apiConfig);
 
         _service = new ImageService(_context, wrappedOptions);
     }
