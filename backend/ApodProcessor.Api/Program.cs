@@ -2,6 +2,7 @@ using backend.Configuration;
 using backend.Data;
 using backend.Services;
 using backend.Services.Background;
+using backend.Services.Interfaces;
 using backend.Utils;
 using Microsoft.EntityFrameworkCore;
 using Polly;
@@ -38,12 +39,13 @@ if (apiConfig != null)
             options.Retry.BackoffType = DelayBackoffType.Exponential;
         });
 
-    builder.Services.AddHostedService<ApodApiClient>();
+    builder.Services.AddHostedService<ApiTimeWorker>();
 }
 
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddSingleton<ImageProcessingQueue>();
 builder.Services.AddHostedService<ImageProcessingWorker>();
+builder.Services.AddSingleton<IApodApiClient, ApodApiClient>();
 
 var app = builder.Build();
 
